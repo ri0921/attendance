@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\StampCorrectionController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\StampCorrectionController as AdminStampCorrectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +19,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/admin/login', [AuthenticatedSessionController::class, 'create']);
+Route::get('/attendance', [AttendanceController::class, 'create']);
+Route::get('/attendance/list', [AttendanceController::class, 'index']);
+Route::get('/attendance/{id}', [AttendanceController::class, 'show']);
+Route::get('/stamp_correction_request/list', [StampCorrectionController::class, 'index']);
+Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
+Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show']);
+Route::get('/admin/staff/list', [StaffController::class, 'index']);
+Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'listStaffAttendance']);
+Route::get('/stamp_correction_request/list', [AdminStampCorrectionController::class, 'index']);
+Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminStampCorrectionController::class, 'show']);
