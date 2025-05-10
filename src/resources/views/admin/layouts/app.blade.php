@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance</title>
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/common.css') }}">
     @yield('css')
 </head>
 
 <body>
-@if (request()->is('admin/login'))
+@if (request()->is('login'))
     <header class="header">
         <div class="header__inner">
             <h1 class="header__logo">
@@ -23,30 +23,25 @@
     <header class="header">
         <div class="header__inner">
             <h1 class="header__logo">
-                <a href="/">
-                    <img src="{{ asset('logo.svg') }}" alt="logo" width="100%">
-                </a>
+                <img src="{{ asset('logo.svg') }}" alt="logo" width="100%">
             </h1>
-            <form class="search-form" action="/search" method="get">
-                @csrf
-                <input class="search-form__input" type="text" name="keyword" placeholder="なにをお探しですか？" value="{{ request('keyword') }}">
-                <input type="hidden" name="tab" value="{{ request('tab') }}">
-                <input type="submit" style="display:none;">
-            </form>
-            <nav class="header__nav">
-                <ul class="header__nav-list">
-                    @if (Auth::check())
+            <nav>
+                <ul class="header__nav">
+                    <li>
+                        <a class="nav__link" href="/attendance">勤怠一覧</a>
+                    </li>
+                    <li>
+                        <a class="nav__link" href="/attendance/list">スタッフ一覧</a>
+                    </li>
+                    <li>
+                        <a class="nav__link" href="/stamp_correction_request/list">申請一覧</a>
+                    </li>
                     <li>
                         <form action="/logout" method="post">
                             @csrf
-                            <button class="nav__auth" type="submit">ログアウト</button>
+                            <button class="logout__button" type="submit">ログアウト</button>
                         </form>
                     </li>
-                    @else
-                    <li><a class="nav__link" href="/login">ログイン</a></li>
-                    @endif
-                    <li><a class="nav__link" href="/mypage">マイページ</a></li>
-                    <li><button class="nav__button" onclick="location.href='/sell'">出品</button></li>
                 </ul>
             </nav>
         </div>
