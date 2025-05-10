@@ -1,0 +1,52 @@
+.main {
+    max-width: 600px;
+    margin: 15% auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.work__status {
+    display: inline-block;
+    color: #696969;
+    background-color: #C8C8C8;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+
+.date {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+.time {
+    font-size: 80px;
+    font-weight: bold;
+    margin-bottom: 70px;
+}
+
+.time-log__button {
+    display: flex;
+    justify-content: space-around;
+}
+
+.button {
+    font-size: 30px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 200px;
+}
+
+.button.attendance {
+    background-color: #000;
+    color: #fff;
+}
+
+.button.break {
+    background-color: #fff;
+    color: #000;
+}
