@@ -25,7 +25,7 @@ Route::get('/attendance/list', [AttendanceController::class, 'index']);
 Route::get('/attendance/{id}/user', [AttendanceController::class, 'show']);
 Route::get('/stamp_correction_request/list/user', [StampCorrectionController::class, 'index']);
 Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
-Route::get('/attendance/{id}/admin', [AdminAttendanceController::class, 'show']);
+Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show']);
 Route::get('/admin/staff/list', [StaffController::class, 'index']);
 Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'listStaffAttendance']);
 Route::get('/stamp_correction_request/list', [AdminStampCorrectionController::class, 'index']);
