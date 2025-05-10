@@ -22,12 +22,6 @@
     font-size: 20px;
 }
 
-@media (max-width: 768px) {
-    .header__nav {
-        font-size: 16px;
-    }
-}
-
 .nav__link {
     text-decoration: none;
     color: #fff;
@@ -44,14 +38,18 @@
     cursor: pointer;
 }
 
-@media (max-width: 768px) {
-    .logout__button {
-        font-size: 16px;
-    }
-}
-
 main {
     background-color: #F0EFF2;
     min-height: 100vh;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .header__nav {
+        font-size: 16px;
+    }
+
+    .logout__button {
+        font-size: 16px;
+    }
 }
