@@ -88,13 +88,7 @@
     border: none;
     padding: 12px 40px;
     font-size: 22px;
+    letter-spacing: 0.1em;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.alert-message {
-    margin-top: 20px;
-    text-align: right;
-    color: #ff0000a1;
-    font-size: 18px;
 }
