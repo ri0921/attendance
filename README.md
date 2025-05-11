@@ -50,7 +50,7 @@ php artisan key:generate
 * MailHog 1.0.1
 
 ## ER図
-![ER図](.png)
+![ER図](attendance.png)
 
 ## URL
 * 開発環境：<http://localhost/>
