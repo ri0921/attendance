@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AdminLoginController;
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'index']);
     Route::post('/login', [AdminLoginController::class, 'login']);
+    Route::post('/logout', [AdminLoginController::class, 'logout']);
 });
 
 Route::middleware(['auth'])->group(function() {

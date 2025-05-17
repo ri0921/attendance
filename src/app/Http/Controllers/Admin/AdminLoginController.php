@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\LoginRequest;
 
 class AdminLoginController extends Controller
 {
@@ -13,7 +14,7 @@ class AdminLoginController extends Controller
         return view('admin.auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
@@ -23,9 +24,21 @@ class AdminLoginController extends Controller
                 return redirect()->intended('/admin/attendance/list');
             } else {
                 Auth::logout();
-                return back();
+                return back()->withErrors([
+                    'email' => '管理者アカウントではありません',
+                ])->withInput();
             }
         }
-        return back();
+        return back()->withErrors([
+            'email' => trans('auth.failed'),
+        ])->withInput();
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/admin/login');
     }
 }

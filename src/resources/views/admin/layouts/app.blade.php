@@ -37,7 +37,7 @@
                         <a class="nav__link" href="/stamp_correction_request/list">申請一覧</a>
                     </li>
                     <li>
-                        <form action="/logout" method="post">
+                        <form action="/admin/logout" method="post">
                             @csrf
                             <button class="logout__button" type="submit">ログアウト</button>
                         </form>

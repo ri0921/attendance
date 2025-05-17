@@ -30,7 +30,7 @@
             </div>
             <div class="form__group">
                 <label class="form__label" for="password">パスワード</label>
-                <input class="form__input" type="password" name="password" value="{{ old('password') }}">
+                <input class="form__input" type="password" name="password">
                 <div class="form__error">
                     @error('password')
                     {{ $message }}
@@ -39,12 +39,7 @@
             </div>
             <div class="form__group">
                 <label class="form__label" for="password_confirmation">パスワード確認</label>
-                <input class="form__input" type="password" name="password_confirmation" value="{{ old('password_confirmation') }}">
-                <div class="form__error">
-                    @error('password_confirmation')
-                    {{ $message }}
-                    @enderror
-                </div>
+                <input class="form__input" type="password" name="password_confirmation">
             </div>
             <div class="form__button">
                 <button class="form__button-submit" type="submit">登録する</button>
