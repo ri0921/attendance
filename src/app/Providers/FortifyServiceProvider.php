@@ -33,10 +33,7 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.register');
         });
 
-        Fortify::loginView(function () {
-            if (request()->is('admin/login')) {
-                return view('admin.auth.login');
-            }
+        Fortify::loginView(function (Request $request) {
             return view('auth.login');
         });
 

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-@if (request()->is('login'))
+@if (request()->is('admin/login'))
     <header class="header">
         <div class="header__inner">
             <h1 class="header__logo">
