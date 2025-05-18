@@ -28,6 +28,10 @@ Route::prefix('admin')->group(function () {
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/attendance', [AttendanceController::class, 'create']);
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn']);
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut']);
+    Route::post('/break/start', [AttendanceController::class, 'startBreak']);
+    Route::post('/break/end', [AttendanceController::class, 'endBreak'])->name('break.end');
     Route::get('/attendance/list', [AttendanceController::class, 'index']);
     Route::get('/attendance/{id}/user', [AttendanceController::class, 'show']);
     Route::get('/stamp_correction_request/list/user', [StampCorrectionController::class, 'index']);
