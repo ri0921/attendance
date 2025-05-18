@@ -8,9 +8,15 @@
 <div class="main">
     <h2 class="title">勤怠一覧</h2>
     <div class="month-selector">
-        <a href="" class="arrow"><img class="arrow__image" src="{{ asset('img/left.png') }}">前月</a>
-        <div class="month"><img class="calendar__image" src="{{ asset('img/calendar.png') }}">2023/06</div>
-        <a href="" class="arrow">翌月<img class="arrow__image" src="{{ asset('img/right.png') }}"></a>
+        <a class="arrow" href="{{ url('/attendance/list') }}?month={{ $prev_month }}">
+            <img class="arrow__image" src="{{ asset('img/left.png') }}">前月
+        </a>
+        <div class="month">
+            <img class="calendar__image" src="{{ asset('img/calendar.png') }}">{{ $current_month }}
+        </div>
+        <a class="arrow" href="{{ url('/attendance/list') }}?month={{ $next_month }}">
+            翌月<img class="arrow__image" src="{{ asset('img/right.png') }}">
+        </a>
     </div>
     <table class="attendance-table">
         <tr class="table__row">
@@ -21,30 +27,38 @@
             <th class="table__header">合計</th>
             <th class="table__header">詳細</th>
         </tr>
-        <tr class="table__row">
-            <td class="table__detail">06/01(木)</td>
-            <td class="table__detail">09:00</td>
-            <td class="table__detail">18:00</td>
-            <td class="table__detail">1:00</td>
-            <td class="table__detail">8:00</td>
-            <td class="table__detail"><a class="detail__link" href="/attendance/{id}/user">詳細</a></td>
-        </tr>
-        <tr class="table__row">
-            <td class="table__detail">06/01(木)</td>
-            <td class="table__detail">09:00</td>
-            <td class="table__detail">18:00</td>
-            <td class="table__detail">1:00</td>
-            <td class="table__detail">8:00</td>
-            <td class="table__detail"><a class="detail__link" href="/attendance/{id}/user">詳細</a></td>
-        </tr>
-        <tr class="table__row">
-            <td class="table__detail">06/01(木)</td>
-            <td class="table__detail">09:00</td>
-            <td class="table__detail">18:00</td>
-            <td class="table__detail">1:00</td>
-            <td class="table__detail">8:00</td>
-            <td class="table__detail"><a class="detail__link" href="/attendance/{id}/user">詳細</a></td>
-        </tr>
+        @foreach ($days as $day)
+            @php
+                $dateKey = $day->toDateString();
+                $attendance = $attendances[$dateKey] ?? null;
+            @endphp
+            <tr class="table__row">
+                <td class="table__detail">
+                    {{ $day->isoFormat('MM/DD(ddd)') }}
+                </td>
+                <td class="table__detail">
+                    @isset($attendance->clock_in)
+                        {{ \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') }}
+                    @endisset
+                </td>
+                <td class="table__detail">
+                    @isset($attendance->clock_out)
+                        {{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') }}
+                    @endisset
+                </td>
+                <td class="table__detail">
+                    {{ optional($attendance)->total_break_formatted }}
+                </td>
+                <td class="table__detail">
+                    {{ optional($attendance)->total_work_formatted }}
+                </td>
+                <td class="table__detail">
+                    @if ($attendance)
+                        <a class="detail__link" href="/attendance/{{ $attendance->id }}">詳細</a>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
     </table>
 </div>
 @endsection

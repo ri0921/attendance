@@ -33,13 +33,12 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/break/start', [AttendanceController::class, 'startBreak']);
     Route::post('/break/end', [AttendanceController::class, 'endBreak'])->name('break.end');
     Route::get('/attendance/list', [AttendanceController::class, 'index']);
-    Route::get('/attendance/{id}/user', [AttendanceController::class, 'show']);
-    Route::get('/stamp_correction_request/list/user', [StampCorrectionController::class, 'index']);
+    Route::get('/attendance/{id}', [AttendanceController::class, 'show']);
+    Route::get('/stamp_correction_request/list', [StampCorrectionController::class, 'index']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
-    Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show']);
     Route::get('/admin/staff/list', [StaffController::class, 'index']);
     Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'listStaffAttendance']);
     Route::get('/stamp_correction_request/list', [AdminStampCorrectionController::class, 'index']);
