@@ -4,14 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('index');
+        $month_param = $request->query('month');
+        $current = $month_param
+            ? Carbon::createFromFormat('Y-m', $month_param)
+            : Carbon::now();
+        $current_month= $current->format('Y/m');
+        $prev_month = $current->copy()
+            ->subMonth()->format('Y-m');
+        $next_month = $current->copy()
+            ->addMonth()->format('Y-m');
+
+        $user_id = Auth::id();
+        $start_of_month = $current->copy()
+            ->startOfMonth();
+        $end_of_month = $current->copy()
+            ->endOfMonth();
+        $attendances = Attendance::with('breakTimes')
+            ->where('user_id', $user_id)
+            ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
+            ->get()
+            ->keyBy('date');
+        $days = CarbonPeriod::create($start_of_month, $end_of_month);
+
+        return view('index', compact('current_month', 'prev_month', 'next_month', 'days', 'attendances'));
     }
 
     public function create()
@@ -92,8 +116,9 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function show()
+    public function show($id)
     {
-        return view('attendance');
+        $attendance = Attendance::findOrFail($id);
+        return view('attendance', compact('attendance'));
     }
 }
