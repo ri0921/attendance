@@ -85,9 +85,17 @@
                     <th class="table__header">出勤・退勤</th>
                     <td class="table__detail">
                         <div class="detail__group">
-                            <input class="input__time" type="time" name="clock_in" value="{{ old('clock_in', \Carbon\Carbon::parse($attendance->clock_in)->format('H:i')) }}" readonly>
+                            <input class="input__time" type="time" name="clock_in" value="{{ old('clock_in', \Carbon\Carbon::parse($attendance->clock_in)->format('H:i')) }}">
                             <span>〜</span>
                             <input class="input__time" type="time" name="clock_out" value="{{ old('clock_out', \Carbon\Carbon::parse($attendance->clock_out)->format('H:i')) }}">
+                        </div>
+                        <div class="form__error">
+                            @error('clock_in')
+                            {{ $message }}
+                            @enderror
+                            @error('clock_out')
+                            {{ $message }}
+                            @enderror
                         </div>
                     </td>
                 </tr>
@@ -96,9 +104,14 @@
                     <th class="table__header">休憩{{ $index === 0 ? '' : $index + 1 }}</th>
                     <td class="table__detail">
                         <div class="detail__group">
-                            <input class="input__time" type="time" name="break_start" value="{{ \Carbon\Carbon::parse($break_time->break_start)->format('H:i') }}">
+                            <input class="input__time" type="time" name="break_time[{{ $index }}][break_start]" value="{{ old("break_time.$index.break_start", \Carbon\Carbon::parse($break_time->break_start)->format('H:i')) }}">
                             <span>〜</span>
-                            <input class="input__time" type="time" name="break_end" value="{{ \Carbon\Carbon::parse($break_time->break_end)->format('H:i') }}">
+                            <input class="input__time" type="time" name="break_time[{{ $index }}][break_end]" value="{{ old("break_time.$index.break_end", \Carbon\Carbon::parse($break_time->break_end)->format('H:i')) }}">
+                        </div>
+                        <div class="form__error">
+                            @error("break_time.{$index}.break_start")
+                            {{ $message }}
+                            @enderror
                         </div>
                     </td>
                 </tr>
@@ -107,9 +120,14 @@
                     <th class="table__header">休憩{{ count($break_times) ? count($break_times) + 1 : '' }}</th>
                     <td class="table__detail">
                         <div class="detail__group">
-                            <input class="input__time" type="time" name="break_start" value="">
+                            <input class="input__time" type="time" name="break_time[{{ count($break_times) }}][break_start]" value="{{ old('break_time.'. count($break_times). '.break_start') }}">
                             <span>〜</span>
-                            <input class="input__time" type="time" name="break_end" value="">
+                            <input class="input__time" type="time" name="break_time[{{ count($break_times) }}][break_end]" value="{{ old('break_time.'. count($break_times). '.break_end') }}">
+                        </div>
+                        <div class="form__error">
+                            @error("break_time." . count($break_times) . ".break_start")
+                            {{ $message }}
+                            @enderror
                         </div>
                     </td>
                 </tr>
@@ -117,6 +135,11 @@
                     <th class="table__header">備考</th>
                     <td class="table__detail">
                         <textarea class="textarea" name="reason">{{ old('reason') }}</textarea>
+                        <div class="form__error">
+                            @error('reason')
+                            {{ $message }}
+                            @enderror
+                        </div>
                     </td>
                 </tr>
             </table>
