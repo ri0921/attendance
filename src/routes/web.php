@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StampCorrectionController as AdminStampCorrectionController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +32,19 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn']);
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut']);
     Route::post('/break/start', [AttendanceController::class, 'startBreak']);
-    Route::post('/break/end', [AttendanceController::class, 'endBreak'])->name('break.end');
+    Route::post('/break/end', [AttendanceController::class, 'endBreak']);
     Route::get('/attendance/list', [AttendanceController::class, 'index']);
-    Route::get('/attendance/{id}', [AttendanceController::class, 'show']);
+
+    Route::get('/attendance/{id}', function($id) {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return app(AdminAttendanceController::class)->show($id);
+        } else {
+            return app(AttendanceController::class)->show($id);
+        }
+    });
+
+    Route::post('/attendance/{id}/request', [StampCorrectionController::class, 'store']);
     Route::get('/stamp_correction_request/list', [StampCorrectionController::class, 'index']);
 });
 

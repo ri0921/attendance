@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\CorrectionAttendance;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
@@ -119,6 +120,11 @@ class AttendanceController extends Controller
     public function show($id)
     {
         $attendance = Attendance::findOrFail($id);
-        return view('attendance', compact('attendance'));
+        $user = Auth::user();
+        $break_times = $attendance->breakTimes;
+
+        $correction = $attendance->correctionAttendance;
+
+        return view('attendance', compact('attendance', 'break_times', 'correction'));
     }
 }
