@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StampCorrectionRequest;
 use App\Models\CorrectionAttendance;
 use App\Models\CorrectionBreak;
+use App\Models\Approval;
 
 class StampCorrectionController extends Controller
 {
@@ -20,7 +21,7 @@ class StampCorrectionController extends Controller
             'clock_out' => $request->clock_out,
             'reason' => $request->reason,
             'requested_at' => now(),
-            'approval_status' => 'pending',
+            'approval_status' => '承認待ち',
         ]);
 
         foreach ($request->input('break_time', []) as $break) {
@@ -38,6 +39,18 @@ class StampCorrectionController extends Controller
 
     public function index()
     {
-        return view('request_list');
+        $tab = request('tab');
+        $user_id = Auth::id();
+        $approvals = null;
+        $correction_attendances = null;
+
+        if ($tab === 'approved') {
+            $approvals = Approval::whereHas('correctionAttendance', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->get();
+        } else {
+            $correction_attendances = CorrectionAttendance::where('user_id', $user_id)->get();
+        }
+        return view('request_list', compact('tab', 'approvals', 'correction_attendances'));
     }
 }

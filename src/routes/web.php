@@ -45,13 +45,19 @@ Route::middleware(['auth'])->group(function() {
     });
 
     Route::post('/attendance/{attendance_id}/request', [StampCorrectionController::class, 'store']);
-    Route::get('/stamp_correction_request/list', [StampCorrectionController::class, 'index']);
+    Route::get('/stamp_correction_request/list', function() {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return app(AdminStampCorrectionController::class)->index();
+        } else {
+            return app(StampCorrectionController::class)->index();
+        }
+    });
 });
 
 Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
     Route::get('/admin/staff/list', [StaffController::class, 'index']);
     Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'listStaffAttendance']);
-    Route::get('/stamp_correction_request/list', [AdminStampCorrectionController::class, 'index']);
     Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminStampCorrectionController::class, 'show']);
 });
