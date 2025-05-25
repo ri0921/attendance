@@ -122,7 +122,6 @@ class AttendanceController extends Controller
         $attendance = Attendance::findOrFail($attendance_id);
         $user = Auth::user();
         $break_times = $attendance->breakTimes;
-
         $correction = $attendance->correctionAttendance;
 
         return view('attendance', compact('attendance', 'break_times', 'correction'));

@@ -27,9 +27,12 @@ class AttendanceController extends Controller
         return view('admin.index', compact('current', 'prev_date', 'next_date', 'attendances'));
     }
 
-    public function show()
+    public function show($attendance_id)
     {
-        return view('admin.attendance');
+        $attendance = Attendance::find($attendance_id);
+        $break_times = $attendance->breakTimes;
+
+        return view('admin.attendance', compact('attendance', 'break_times'));
     }
 
     public function listStaffAttendance()

@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => '山田 太郎',
+            'name' => '山田　太郎',
             'email' => 'taro.y@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => '佐藤 花子',
+            'name' => '佐藤　花子',
             'email' => 'hanako.s@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => '西 伶奈',
+            'name' => '西　伶奈',
             'email' => 'reina.n@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
