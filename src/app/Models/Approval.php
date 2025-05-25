@@ -15,7 +15,7 @@ class Approval extends Model
         'approval_status',
     ];
 
-    public function correctionRequest() {
-        return $this->belongsTo('App\Models\CorrectionRequest');
+    public function correctionAttendance() {
+        return $this->belongsTo('App\Models\CorrectionAttendance');
     }
 }
