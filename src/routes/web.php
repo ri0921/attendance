@@ -35,16 +35,16 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/break/end', [AttendanceController::class, 'endBreak']);
     Route::get('/attendance/list', [AttendanceController::class, 'index']);
 
-    Route::get('/attendance/{id}', function($id) {
+    Route::get('/attendance/{attendance_id}', function($attendance_id) {
         $user = Auth::user();
         if ($user->role === 'admin') {
-            return app(AdminAttendanceController::class)->show($id);
+            return app(AdminAttendanceController::class)->show($attendance_id);
         } else {
-            return app(AttendanceController::class)->show($id);
+            return app(AttendanceController::class)->show($attendance_id);
         }
     });
 
-    Route::post('/attendance/{id}/request', [StampCorrectionController::class, 'store']);
+    Route::post('/attendance/{attendance_id}/request', [StampCorrectionController::class, 'store']);
     Route::get('/stamp_correction_request/list', [StampCorrectionController::class, 'index']);
 });
 

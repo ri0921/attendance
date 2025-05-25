@@ -117,9 +117,9 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function show($id)
+    public function show($attendance_id)
     {
-        $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::findOrFail($attendance_id);
         $user = Auth::user();
         $break_times = $attendance->breakTimes;
 

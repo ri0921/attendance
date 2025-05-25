@@ -58,7 +58,7 @@
     <div class="alert-message">* 承認待ちのため修正はできません。</div>
 
     @else
-    <form action="/attendance/{id}/request" method="POST">
+    <form action="/attendance/{{$attendance->id}}/request" method="POST">
         @csrf
         <div class="table-wrapper">
             <table class="table">
