@@ -100,21 +100,21 @@
                     </td>
                 </tr>
                 @foreach ($break_times as $index => $break_time)
-                <tr class="table__row">
-                    <th class="table__header">休憩{{ $index === 0 ? '' : $index + 1 }}</th>
-                    <td class="table__detail">
-                        <div class="detail__group">
-                            <input class="input__time" type="time" name="break_time[{{ $index }}][break_start]" value="{{ old("break_time.$index.break_start", \Carbon\Carbon::parse($break_time->break_start)->format('H:i')) }}">
-                            <span>〜</span>
-                            <input class="input__time" type="time" name="break_time[{{ $index }}][break_end]" value="{{ old("break_time.$index.break_end", \Carbon\Carbon::parse($break_time->break_end)->format('H:i')) }}">
-                        </div>
-                        <div class="form__error">
-                            @error("break_time.{$index}.break_start")
-                            {{ $message }}
-                            @enderror
-                        </div>
-                    </td>
-                </tr>
+                    <tr class="table__row">
+                        <th class="table__header">休憩{{ $index === 0 ? '' : $index + 1 }}</th>
+                        <td class="table__detail">
+                            <div class="detail__group">
+                                <input class="input__time" type="time" name="break_time[{{ $index }}][break_start]" value="{{ old("break_time.$index.break_start", \Carbon\Carbon::parse($break_time->break_start)->format('H:i')) }}">
+                                <span>〜</span>
+                                <input class="input__time" type="time" name="break_time[{{ $index }}][break_end]" value="{{ old("break_time.$index.break_end", \Carbon\Carbon::parse($break_time->break_end)->format('H:i')) }}">
+                            </div>
+                            <div class="form__error">
+                                @error("break_time.{$index}.break_start")
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
                 <tr class="table__row">
                     <th class="table__header">休憩{{ count($break_times) ? count($break_times) + 1 : '' }}</th>
@@ -126,7 +126,7 @@
                         </div>
                         <div class="form__error">
                             @error("break_time." . count($break_times) . ".break_start")
-                            {{ $message }}
+                                {{ $message }}
                             @enderror
                         </div>
                     </td>
@@ -137,7 +137,7 @@
                         <textarea class="textarea" name="reason">{{ old('reason') }}</textarea>
                         <div class="form__error">
                             @error('reason')
-                            {{ $message }}
+                                {{ $message }}
                             @enderror
                         </div>
                     </td>
