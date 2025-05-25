@@ -3,13 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StampCorrectionRequest;
+use App\Models\CorrectionAttendance;
+use App\Models\CorrectionBreak;
 
 class StampCorrectionController extends Controller
 {
-    public function store(StampCorrectionRequest $request)
+    public function store($attendance_id, StampCorrectionRequest $request)
     {
-        return back();
+        $user = Auth::user();
+        $correction_attendance = CorrectionAttendance::create([
+            'user_id' => $user->id,
+            'attendance_id' => $attendance_id,
+            'clock_in' => $request->clock_in,
+            'clock_out' => $request->clock_out,
+            'reason' => $request->reason,
+            'requested_at' => now(),
+            'approval_status' => 'pending',
+        ]);
+
+        foreach ($request->input('break_time', []) as $break) {
+            if (!empty($break['break_start']) && !empty($break['break_end'])) {
+                CorrectionBreak::create([
+                    'correction_attendance_id' => $correction_attendance->id,
+                    'break_start' => $break['break_start'],
+                    'break_end' => $break['break_end'],
+                ]);
+            }
+        }
+        return redirect("/attendance/{$attendance_id}");
     }
 
 

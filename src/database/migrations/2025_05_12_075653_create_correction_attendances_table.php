@@ -20,8 +20,8 @@ class CreateCorrectionAttendancesTable extends Migration
             $table->time('clock_in');
             $table->time('clock_out');
             $table->string('reason');
-            $table->date('requested_at');
-            $table->string('approval_status')->default('pending');
+            $table->datetime('requested_at');
+            $table->string('approval_status');
             $table->timestamps();
         });
     }
