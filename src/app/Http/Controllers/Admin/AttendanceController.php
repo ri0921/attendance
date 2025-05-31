@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\Attendance;
+use App\Models\BreakTime;
+use App\Models\User;
 
 class AttendanceController extends Controller
 {
@@ -36,8 +39,30 @@ class AttendanceController extends Controller
         return view('admin.attendance', compact('attendance', 'break_times'));
     }
 
-    public function listStaffAttendance()
+    public function listStaffAttendance(User $user, Request $request)
     {
-        return view('admin.staff_attendance_list');
+        $month_param = $request->query('month');
+        $current = $month_param
+            ? Carbon::createFromFormat('Y-m', $month_param)
+            : Carbon::now();
+        $current_month= $current->format('Y/m');
+        $prev_month = $current->copy()
+            ->subMonth()->format('Y-m');
+        $next_month = $current->copy()
+            ->addMonth()->format('Y-m');
+
+        $start_of_month = $current->copy()
+            ->startOfMonth();
+        $end_of_month = $current->copy()
+            ->endOfMonth();
+        $attendances = Attendance::with('breakTimes')
+            ->where('user_id', $user->id)
+            ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+        $days = CarbonPeriod::create($start_of_month, $end_of_month);
+
+        return view('admin.staff_attendance_list', compact('current_month', 'prev_month', 'next_month', 'days', 'user', 'attendances'));
     }
 }
