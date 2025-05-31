@@ -17,7 +17,7 @@
             <tr class="table__row">
                 <td class="table__detail">{{ $user->name }}</td>
                 <td class="table__detail">{{ $user->email }}</td>
-                <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{id}">詳細</a></td>
+                <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{{ $user->id }}">詳細</a></td>
             </tr>
         @endforeach
     </table>

@@ -58,6 +58,6 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
     Route::get('/admin/staff/list', [StaffController::class, 'index']);
-    Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'listStaffAttendance']);
+    Route::get('/admin/attendance/staff/{user}', [AdminAttendanceController::class, 'listStaffAttendance']);
     Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminStampCorrectionController::class, 'show']);
 });
