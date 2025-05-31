@@ -43,8 +43,8 @@ Route::middleware(['auth'])->group(function() {
             return app(AttendanceController::class)->show($attendance_id);
         }
     });
-
     Route::post('/attendance/{attendance_id}/request', [StampCorrectionController::class, 'store']);
+    Route::post('/attendance/{attendance_id}/update', [AdminStampCorrectionController::class, 'update']);
     Route::get('/stamp_correction_request/list', function() {
         $user = Auth::user();
         if ($user->role === 'admin') {
