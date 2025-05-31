@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StampCorrectionRequest;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\CorrectionAttendance;
+use App\Models\Approval;
 
 class StampCorrectionController extends Controller
 {
@@ -39,7 +41,17 @@ class StampCorrectionController extends Controller
 
     public function index()
     {
-        return view('admin.request_list');
+        $tab = request('tab');
+        $approvals = null;
+        $correction_attendances = null;
+
+        if ($tab === 'approved') {
+            $approvals = Approval::all();
+        } else {
+            $correction_attendances = CorrectionAttendance::all();
+        }
+
+        return view('admin.request_list', compact('tab', 'correction_attendances', 'approvals'));
     }
 
     public function show()
