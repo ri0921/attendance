@@ -7,7 +7,7 @@
 @section('content')
 <div class="main">
     <h2 class="title">勤怠詳細</h2>
-    <form action="" method="post">
+    <form action="/attendance/{{ $attendance->id }}/update" method="post">
         @csrf
         <div class="table-wrapper">
             <table class="table">
@@ -83,7 +83,14 @@
                 <tr class="table__row">
                     <th class="table__header">備考</th>
                     <td class="table__detail">
-                        <textarea class="textarea" name="reason">{{ old('reason') }}</textarea>
+                        <textarea class="textarea" name="reason">
+                            {{ old('reason') }}
+                        </textarea>
+                        <div class="form__error">
+                            @error('reason')
+                                {{ $message }}
+                            @enderror
+                        </div>
                     </td>
                 </tr>
             </table>

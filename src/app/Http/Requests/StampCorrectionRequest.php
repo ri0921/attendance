@@ -94,8 +94,14 @@ class StampCorrectionRequest extends FormRequest
             }
 
             foreach ($break_times as $i => $b1) {
+                if (empty($b1['break_start']) || empty($b1['break_end'])) {
+                    continue;
+                }
                 foreach ($break_times as $j => $b2) {
                     if ($i >= $j) continue;
+                    if (empty($b2['break_start']) || empty($b2['break_end'])) {
+                        continue;
+                    }
                     if (
                         $b1['break_start']->lt($b2['break_end']) &&
                         $b1['break_end']->gt($b2['break_start'])

@@ -31,6 +31,7 @@ class AttendanceController extends Controller
     {
         $attendance = Attendance::find($attendance_id);
         $break_times = $attendance->breakTimes;
+        session()->flash('return_url', url()->previous());
 
         return view('admin.attendance', compact('attendance', 'break_times'));
     }

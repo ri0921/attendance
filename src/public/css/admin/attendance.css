@@ -77,6 +77,11 @@
     resize: none;
 }
 
+.form__error {
+    font-size: 16px;
+    color: #ff0000a1;
+}
+
 .button {
     text-align: right;
     margin-top: 70px;
