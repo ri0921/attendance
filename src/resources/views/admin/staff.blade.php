@@ -13,21 +13,13 @@
             <th class="table__header">メールアドレス</th>
             <th class="table__header">月次勤怠</th>
         </tr>
-        <tr class="table__row">
-            <td class="table__detail">西 伶奈</td>
-            <td class="table__detail">reina.n@coachtech.com</td>
-            <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{id}">詳細</a></td>
-        </tr>
-        <tr class="table__row">
-            <td class="table__detail">西 伶奈</td>
-            <td class="table__detail">reina.n@coachtech.com</td>
-            <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{id}">詳細</a></td>
-        </tr>
-        <tr class="table__row">
-            <td class="table__detail">西 伶奈</td>
-            <td class="table__detail">reina.n@coachtech.com</td>
-            <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{id}">詳細</a></td>
-        </tr>
+        @foreach ($users as $user)
+            <tr class="table__row">
+                <td class="table__detail">{{ $user->name }}</td>
+                <td class="table__detail">{{ $user->email }}</td>
+                <td class="table__detail"><a class="detail__link" href="/admin/attendance/staff/{id}">詳細</a></td>
+            </tr>
+        @endforeach
     </table>
 </div>
 @endsection
