@@ -11,7 +11,6 @@ class Approval extends Model
 
     protected $fillable = [
         'correction_attendance_id',
-        'approved_at',
         'approval_status',
     ];
 

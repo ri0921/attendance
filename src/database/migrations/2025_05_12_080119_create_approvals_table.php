@@ -16,7 +16,6 @@ class CreateApprovalsTable extends Migration
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('correction_attendance_id')->constrained()->cascadeOnDelete();
-            $table->date('approved_at');
             $table->string('approval_status')->default('approved');
             $table->timestamps();
         });
