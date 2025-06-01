@@ -9,6 +9,7 @@ use App\Http\Requests\StampCorrectionRequest;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\CorrectionAttendance;
+use App\Models\CorrectionBreak;
 use App\Models\Approval;
 
 class StampCorrectionController extends Controller
@@ -48,14 +49,16 @@ class StampCorrectionController extends Controller
         if ($tab === 'approved') {
             $approvals = Approval::all();
         } else {
-            $correction_attendances = CorrectionAttendance::all();
+            $correction_attendances = CorrectionAttendance::where('approval_status', '承認待ち')->get();
         }
 
         return view('admin.request_list', compact('tab', 'correction_attendances', 'approvals'));
     }
 
-    public function show()
+    public function show($correction_attendance_id, Request $request)
     {
-        return view('admin.approve');
+        $correction_attendance = CorrectionAttendance::find($correction_attendance_id);
+        $correction_breaks = $correction_attendance->correctionBreaks;
+        return view('admin.approve', compact('correction_attendance', 'correction_breaks'));
     }
 }

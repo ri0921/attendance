@@ -38,7 +38,7 @@
                     <td class="table__detail">
                         {{ \Carbon\Carbon::parse($correction_attendance->requested_at)->format('Y/m/d') }}
                     </td>
-                    <td class="table__detail"><a class="detail__link" href="/attendance/{{ $correction_attendance->attendance->id }}">詳細</a></td>
+                    <td class="table__detail"><a class="detail__link" href="/attendance/{{ $correction_attendance->id }}">詳細</a></td>
                 </tr>
             @endforeach
         @endif
