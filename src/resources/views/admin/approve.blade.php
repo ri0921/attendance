@@ -61,7 +61,11 @@
             </table>
         </div>
         <div class="button">
-            <button class="approve__button" type="submit">承認</button>
+            @if ($correction_attendance->approval_status === '承認待ち')
+                <button class="approve__button" type="submit">承認</button>
+            @elseif ($correction_attendance->approval_status === '承認済み')
+                <button class="approved__button" type="button">承認済み</button>
+            @endif
         </div>
     </form>
 </div>

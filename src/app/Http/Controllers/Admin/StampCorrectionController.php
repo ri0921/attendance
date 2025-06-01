@@ -11,6 +11,7 @@ use App\Models\BreakTime;
 use App\Models\CorrectionAttendance;
 use App\Models\CorrectionBreak;
 use App\Models\Approval;
+use App\Models\User;
 
 class StampCorrectionController extends Controller
 {
@@ -47,9 +48,11 @@ class StampCorrectionController extends Controller
         $correction_attendances = null;
 
         if ($tab === 'approved') {
-            $approvals = Approval::all();
+            $approvals = Approval::with('correctionAttendance.user', 'correctionAttendance.attendance')->get();
         } else {
-            $correction_attendances = CorrectionAttendance::where('approval_status', '承認待ち')->get();
+            $correction_attendances = CorrectionAttendance::with('user', 'attendance')
+                ->where('approval_status', '承認待ち')
+                ->get();
         }
 
         return view('admin.request_list', compact('tab', 'correction_attendances', 'approvals'));
@@ -60,5 +63,35 @@ class StampCorrectionController extends Controller
         $correction_attendance = CorrectionAttendance::find($correction_attendance_id);
         $correction_breaks = $correction_attendance->correctionBreaks;
         return view('admin.approve', compact('correction_attendance', 'correction_breaks'));
+    }
+
+    public function approve($correction_attendance_id, Request $request)
+    {
+        $correction_attendance = CorrectionAttendance::find($correction_attendance_id);
+
+        DB::transaction(function () use ($correction_attendance_id) {
+            $correction_attendance = CorrectionAttendance::find($correction_attendance_id);
+            $correction_attendance->approval_status = '承認済み';
+            $correction_attendance->save();
+
+            $attendance = Attendance::find($correction_attendance->attendance_id);
+            $attendance->clock_in = $correction_attendance->clock_in;
+            $attendance->clock_out = $correction_attendance->clock_out;
+            $attendance->save();
+
+            BreakTime::where('attendance_id', $attendance->id)->delete();
+            foreach ($correction_attendance->correctionBreaks as $break) {
+                BreakTime::create([
+                    'attendance_id' => $attendance->id,
+                    'break_start' => $break->break_start,
+                    'break_end' => $break->break_end,
+                ]);
+            }
+            Approval::create([
+                'correction_attendance_id' => $correction_attendance->id,
+                'approval_status' => '承認済み',
+            ]);
+        });
+        return redirect('/stamp_correction_request/approve/'. $correction_attendance->id);
     }
 }
