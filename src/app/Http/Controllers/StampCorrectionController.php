@@ -49,7 +49,9 @@ class StampCorrectionController extends Controller
                 $query->where('user_id', $user_id);
             })->get();
         } else {
-            $correction_attendances = CorrectionAttendance::where('user_id', $user_id)->get();
+            $correction_attendances = CorrectionAttendance::where('user_id', $user_id)
+                ->where('approval_status', '承認待ち')
+                ->get();
         }
         return view('request_list', compact('tab', 'approvals', 'correction_attendances'));
     }

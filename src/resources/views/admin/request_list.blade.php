@@ -39,7 +39,7 @@
                         {{ \Carbon\Carbon::parse($correction_attendance->requested_at)->format('Y/m/d') }}
                     </td>
                     <td class="table__detail">
-                        <a class="detail__link" href="/stamp_correction_request/approve/{{ $correction_attendance->attendance->id }}">詳細</a>
+                        <a class="detail__link" href="/stamp_correction_request/approve/{{ $correction_attendance->id }}">詳細</a>
                     </td>
                 </tr>
             @endforeach

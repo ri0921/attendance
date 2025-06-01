@@ -23,7 +23,9 @@
                         <div class="year">
                             {{ \Carbon\Carbon::parse($attendance->date)->format('Y年')}}
                         </div>
-                        <div class="date">6月1日</div>
+                        <div class="date">
+                            {{ \Carbon\Carbon::parse($attendance->date)->format('m月d日')}}
+                        </div>
                     </div>
                 </td>
             </tr>
