@@ -51,19 +51,19 @@
                         {{ $approval->approval_status }}
                     </td>
                     <td class="table__detail">
-                        {{ $approval->correction_attendance->user->id }}
+                        {{ $approval->correctionAttendance->user->name }}
                     </td>
                     <td class="table__detail">
-                        {{ \Carbon\Carbon::parse($approval->correction_attendance->attendance->date)->format('Y/m/d') }}
+                        {{ \Carbon\Carbon::parse($approval->correctionAttendance->attendance->date)->format('Y/m/d') }}
                     </td>
                     <td class="table__detail">
-                        {{ $approval->correction_attendance->reason }}
+                        {{ $approval->correctionAttendance->reason }}
                     </td>
                     <td class="table__detail">
-                        {{ \Carbon\Carbon::parse($approval->correction_attendance->requested_at)->format('Y/m/d') }}
+                        {{ \Carbon\Carbon::parse($approval->correctionAttendance->requested_at)->format('Y/m/d') }}
                     </td>
                     <td class="table__detail">
-                        <a class="detail__link" href="/stamp_correction_request/approve/{{ $approval->correction_attendance->attendance->id }}">詳細</a>
+                        <a class="detail__link" href="/stamp_correction_request/approve/{{ $approval->correctionAttendance->id }}">詳細</a>
                     </td>
                 </tr>
             @endforeach
