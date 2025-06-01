@@ -27,8 +27,8 @@ class Attendance extends Model
         return $this->hasMany('App\Models\BreakTime');
     }
 
-    public function correctionAttendance() {
-        return $this->hasOne('App\Models\CorrectionAttendance');
+    public function correctionAttendances() {
+        return $this->hasMany('App\Models\CorrectionAttendance');
     }
 
     public function getTotalBreakDurationAttribute()

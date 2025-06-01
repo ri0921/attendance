@@ -8,6 +8,7 @@ use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\CorrectionAttendance;
+use App\Models\CorrectionBreak;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
@@ -119,11 +120,18 @@ class AttendanceController extends Controller
 
     public function show($attendance_id)
     {
-        $attendance = Attendance::findOrFail($attendance_id);
+        $attendance = Attendance::find($attendance_id);
         $user = Auth::user();
         $break_times = $attendance->breakTimes;
-        $correction = $attendance->correctionAttendance;
+        $has_pending = $attendance->correctionAttendances && $attendance->correctionAttendances->contains(function ($correction) {
+            return $correction->approval_status === '承認待ち';
+        });
 
-        return view('attendance', compact('attendance', 'break_times', 'correction'));
+        $correction_attendance = CorrectionAttendance::where('attendance_id', $attendance_id)
+            ->where('approval_status', '承認待ち')
+            ->first();
+        $correction_breaks = $correction_attendance ? $correction_attendance->correctionBreaks : collect();
+
+        return view('attendance', compact('attendance', 'break_times', 'has_pending', 'correction_attendance', 'correction_breaks'));
     }
 }
