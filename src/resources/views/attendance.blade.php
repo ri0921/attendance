@@ -7,7 +7,7 @@
 @section('content')
 <div class="main">
     <h2 class="title">勤怠詳細</h2>
-    @if ($correction)
+    @if ($has_pending)
     <div class="table-wrapper">
         <table class="table">
             <tr class="table__row">
@@ -33,26 +33,28 @@
                 <th class="table__header">出勤・退勤</th>
                 <td class="table__detail">
                     <div class="detail__group">
-                        09:00
+                        {{ \Carbon\Carbon::parse($correction_attendance->clock_in)->format('H:i')}}
                         <span>〜</span>
-                        18:00
+                        {{ \Carbon\Carbon::parse($correction_attendance->clock_out)->format('H:i')}}
                     </div>
                 </td>
             </tr>
-            <tr class="table__row">
-                <th class="table__header">休憩</th>
-                <td class="table__detail">
-                    <div class="detail__group">
-                        12:00
-                        <span>〜</span>
-                        13:00
-                    </div>
-                </td>
-            </tr>
+            @foreach ($correction_breaks as $index => $correction_break)
+                    <tr class="table__row">
+                        <th class="table__header">休憩{{ $index === 0 ? '' : $index + 1 }}</th>
+                        <td class="table__detail">
+                            <div class="detail__group">
+                                {{ \Carbon\Carbon::parse($correction_break->break_start)->format('H:i')}}
+                                <span>〜</span>
+                                {{ \Carbon\Carbon::parse($correction_break->break_end)->format('H:i')}}
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
             <tr class="table__row">
                 <th class="table__header">備考</th>
                 <td class="table__detail">
-                    電車遅延のため
+                    {{ $correction_attendance->reason }}
                 </td>
             </tr>
         </table>
