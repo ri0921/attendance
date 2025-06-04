@@ -84,7 +84,6 @@
 }
 
 .export__button {
-    text-decoration: none;
     background-color: #000;
     color: #fff;
     border-radius: 5px;
@@ -92,4 +91,5 @@
     font-size: 22px;
     font-weight: bold;
     letter-spacing: 0.1em;
+    cursor: pointer;
 }

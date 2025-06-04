@@ -61,7 +61,10 @@
         @endforeach
     </table>
     <div class="export">
-        <a class="export__button" href="">CSV出力</a>
+        <form action="/admin/attendance/staff/{{ $user->id }}/export" method="get">
+            <input type="hidden" name="month" value="{{ request('month') }}">
+            <button class="export__button" type="submit">CSV出力</button>
+        </form>
     </div>
 </div>
 @endsection
