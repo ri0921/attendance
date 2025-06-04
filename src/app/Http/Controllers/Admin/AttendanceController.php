@@ -9,6 +9,7 @@ use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AttendanceController extends Controller
 {
@@ -64,5 +65,47 @@ class AttendanceController extends Controller
         $days = CarbonPeriod::create($start_of_month, $end_of_month);
 
         return view('admin.staff_attendance_list', compact('current_month', 'prev_month', 'next_month', 'days', 'user', 'attendances'));
+    }
+
+    public function export(Request $request, User $user)
+    {
+        $month = $request->query('month') ?? Carbon::now()->format('Y-m');
+        $carbonMonth = Carbon::createFromFormat('Y-m', $month);
+
+        $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $endOfMonth = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
+
+        $attendances = Attendance::with('breakTimes')
+            ->where('user_id', $user->id)
+            ->whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->get();
+
+        $filename = $user->name . '_' . $month . '_勤怠.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+        $columns = ['日付', '出勤', '退勤', '休憩時間', '勤務時間'];
+
+        return response()->stream(function () use ($attendances, $columns) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $columns);
+
+            foreach ($attendances as $attendance) {
+                $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : '';
+                $clockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : '';
+                $break = $attendance->total_break_formatted ?? '';
+                $work = $attendance->total_work_formatted ?? '';
+
+                fputcsv($handle, [
+                    Carbon::parse($attendance->date)->format('Y/m/d'),
+                    $clockIn,
+                    $clockOut,
+                    $break,
+                    $work,
+                ]);
+            }
+            fclose($handle);
+        }, 200, $headers);
     }
 }
