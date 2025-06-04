@@ -70,7 +70,6 @@ class AttendanceController extends Controller
     public function export(Request $request, User $user)
     {
         $month = $request->query('month') ?? Carbon::now()->format('Y-m');
-        $carbonMonth = Carbon::createFromFormat('Y-m', $month);
 
         $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
         $endOfMonth = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
