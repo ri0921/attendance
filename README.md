@@ -35,12 +35,25 @@ composer install
 ```
 * .envファイル作成、環境変数を変更
 ```
-cp .env.example .env
+cp src/.env.example src/.env
 ```
 * アプリケーションキーの生成
 ```
 php artisan key:generate
 ```
+* .env.testingを作成、環境変数を変更
+* テスト用アプリケーションキーの作成
+```
+php artisan key:generate --env=testing
+```
+```
+php artisan config:clear
+```
+* テスト用テーブル作成
+```
+php artisan migrate --env=testing
+```
+
 
 ## 使用技術
 * PHP 7.4.9
