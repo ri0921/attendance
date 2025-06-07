@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StampCorrectionController as AdminStampCorrectionController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +22,15 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend']);
+
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'index']);
     Route::post('/login', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout']);
 });
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware('auth', 'verified')->group(function() {
     Route::get('/attendance', [AttendanceController::class, 'create']);
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn']);
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut']);

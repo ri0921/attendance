@@ -1,3 +1,9 @@
+.alert.alert-success {
+    background-color: rgba(152, 235, 208, 0.993);
+    color: green;
+    padding: 5px;
+}
+
 .main {
     margin: 15% auto;
     width: 70%;
@@ -14,13 +20,14 @@
 }
 
 .verify__button-submit {
+    text-decoration: none;
     border: solid 1px #000;
     border-radius: 10px;
     background-color: #D9D9D9;
+    color: #000;
     font-size: 20px;
     font-weight: bold;
-    padding: 13px 30px;
-    cursor: pointer;
+    padding: 20px 30px;
 }
 
 .resend-mail__link {
