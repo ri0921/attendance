@@ -8,6 +8,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
 
 class AttendanceRegistrationTest extends TestCase
 {
@@ -50,5 +51,16 @@ class AttendanceRegistrationTest extends TestCase
         $response = $this->get('/attendance');
         $response->assertStatus(200);
         $response->assertSee('出勤中');
+    }
+
+    public function test_work_status_is_on_break()
+    {
+        $attendance = Attendance::factory()->working()->create();
+        BreakTime::factory()->on_break()->create(['attendance_id' => $attendance->id]);
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('休憩中');
     }
 }
