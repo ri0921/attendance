@@ -41,4 +41,15 @@ class AdminLoginTest extends TestCase
         $response->assertSessionHasErrors([
             'password' => 'パスワードを入力してください']);
     }
+
+    public function test_wrong_login_admin()
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'wrong@example.com',
+            'password' => 'password',
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'email' => 'ログイン情報が登録されていません']);
+    }
 }
