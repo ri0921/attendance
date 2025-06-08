@@ -31,4 +31,13 @@ class AttendanceRegistrationTest extends TestCase
         $response->assertSee($date);
         $response->assertSee($time);
     }
+
+    public function test_work_status_is_off_duty()
+    {
+        $user = User::first();
+        $this->actingAs($user);
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('勤務外');
+    }
 }
