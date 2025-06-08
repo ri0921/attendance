@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Attendance;
 
 class AttendanceRegistrationTest extends TestCase
 {
@@ -34,10 +35,20 @@ class AttendanceRegistrationTest extends TestCase
 
     public function test_work_status_is_off_duty()
     {
-        $user = User::first();
+        $user = User::find(2);
         $this->actingAs($user);
         $response = $this->get('/attendance');
         $response->assertStatus(200);
         $response->assertSee('勤務外');
+    }
+
+    public function test_work_status_is_working()
+    {
+        Attendance::factory()->working()->create();
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('出勤中');
     }
 }
