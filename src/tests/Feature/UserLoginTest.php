@@ -40,4 +40,15 @@ class UserLoginTest extends TestCase
         $response->assertSessionHasErrors([
             'password' => 'パスワードを入力してください']);
     }
+
+    public function test_wrong_login_user()
+    {
+        $response = $this->post('/login', [
+            'email' => 'wrong@example.com',
+            'password' => 'password',
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'email' => 'ログイン情報が登録されていません']);
+    }
 }
