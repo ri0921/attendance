@@ -30,4 +30,15 @@ class AdminLoginTest extends TestCase
         $response->assertSessionHasErrors([
             'email' => 'メールアドレスを入力してください']);
     }
+
+    public function test_password_is_required()
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'admin@example.com',
+            'password' => '',
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'password' => 'パスワードを入力してください']);
+    }
 }
