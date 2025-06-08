@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 
-class AttendanceRegistrationTest extends TestCase
+class AttendanceStatusDisplayTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -34,7 +34,7 @@ class AttendanceRegistrationTest extends TestCase
         $response->assertSee($time);
     }
 
-    public function test_work_status_is_off_duty()
+    public function test_status_is_off_duty()
     {
         $user = User::find(2);
         $this->actingAs($user);
@@ -43,7 +43,7 @@ class AttendanceRegistrationTest extends TestCase
         $response->assertSee('勤務外');
     }
 
-    public function test_work_status_is_working()
+    public function test_status_is_working()
     {
         Attendance::factory()->working()->create();
         $user = User::find(2);
@@ -53,7 +53,7 @@ class AttendanceRegistrationTest extends TestCase
         $response->assertSee('出勤中');
     }
 
-    public function test_work_status_is_on_break()
+    public function test_status_is_on_break()
     {
         $attendance = Attendance::factory()->working()->create();
         BreakTime::factory()->on_break()->create(['attendance_id' => $attendance->id]);
@@ -62,5 +62,15 @@ class AttendanceRegistrationTest extends TestCase
         $response = $this->get('/attendance');
         $response->assertStatus(200);
         $response->assertSee('休憩中');
+    }
+
+    public function test_status_is_clocked_out()
+    {
+        Attendance::factory()->clocked_out()->create();
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('退勤済');
     }
 }
