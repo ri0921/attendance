@@ -34,4 +34,14 @@ class ClockInTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('出勤中');
     }
+
+    public function test_clock_in_only_once_per_day()
+    {
+        Attendance::factory()->clocked_out()->create();
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertDontSee('action="/attendance/clock-in"', false);
+    }
 }
