@@ -23,7 +23,7 @@ class AttendanceStatusDisplayTest extends TestCase
 
     public function test_displayed_datetime_matches_now()
     {
-        $user = User::first();
+        $user = User::find(2);
         $this->actingAs($user);
         $response = $this->get('/attendance');
         $response->assertStatus(200);
