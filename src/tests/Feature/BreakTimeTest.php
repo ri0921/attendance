@@ -45,4 +45,20 @@ class BreakTimeTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('休憩入');
     }
+
+    public function test_break_end()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->post('/attendance/clock-in');
+        $response = $this->post('/break/start');
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('休憩戻');
+
+        $response = $this->post('/break/end');
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('出勤中');
+    }
 }
