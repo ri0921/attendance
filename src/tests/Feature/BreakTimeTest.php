@@ -33,4 +33,16 @@ class BreakTimeTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('休憩中');
     }
+
+    public function test_user_can_take_multiple_breaks_in_a_day()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->post('/attendance/clock-in');
+        $response = $this->post('/break/start');
+        $response = $this->post('/break/end');
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('休憩入');
+    }
 }
