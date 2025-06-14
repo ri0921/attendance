@@ -44,4 +44,18 @@ class ClockInTest extends TestCase
         $response->assertStatus(200);
         $response->assertDontSee('action="/attendance/clock-in"', false);
     }
+
+    public function test_clock_in_time_is_displayed_in_attendance_list()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->post('/attendance/clock-in');
+        $response = $this->get('/attendance/list');
+        $response->assertStatus(200);
+
+        $now = now()->setSeconds(0);
+        $today = $now->format('m/d');
+        $response->assertSee($today);
+        $response->assertSee($now->format('H:i'));
+    }
 }
