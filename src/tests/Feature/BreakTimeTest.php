@@ -8,6 +8,8 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
+use Illuminate\Support\Carbon;
 
 class BreakTimeTest extends TestCase
 {
@@ -60,5 +62,24 @@ class BreakTimeTest extends TestCase
         $response = $this->get('/attendance');
         $response->assertStatus(200);
         $response->assertSee('出勤中');
+    }
+
+    public function test_user_can_take_multiple_breaks_end_in_a_day()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->post('/attendance/clock-in', [
+            'clock_in' => Carbon::now()->subHours(1),
+        ]);
+        $response = $this->post('/break/start', [
+            'break_start' => Carbon::now()->subHour(),
+        ]);
+        $response = $this->post('/break/end', [
+            'break_end' => Carbon::now()->subMinutes(10),
+        ]);
+        $response = $this->post('/break/start');
+        $response = $this->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('休憩戻');
     }
 }
