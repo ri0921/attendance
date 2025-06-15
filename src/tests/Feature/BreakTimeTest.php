@@ -82,4 +82,23 @@ class BreakTimeTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('休憩戻');
     }
+
+    public function test_attendance_list_displays_break_times()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->working()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+        $response = $this->get('/attendance/list');
+        $response->assertStatus(200);
+        $now = now()->setSeconds(0);
+        $today = $now->format('m/d');
+        $html = $response->getContent();
+
+        preg_match('/<tr[^>]*>.*?' . preg_quote($today, '/') . '.*?<\/tr>/s', $html, $matches);
+        $row = $matches[0];
+        $this->assertStringContainsString('0:45', $row);
+    }
 }
