@@ -8,6 +8,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
 
 class ClockInTest extends TestCase
 {
@@ -28,6 +29,7 @@ class ClockInTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('action="/attendance/clock-in"', false);
 
+        $response = $this->post('/attendance/clock-in');
         $response = $this->followingRedirects()->post('/attendance/clock-in');
         $response->assertStatus(200);
         $response->assertSee('出勤中');
@@ -53,7 +55,9 @@ class ClockInTest extends TestCase
 
         $now = now()->setSeconds(0);
         $today = $now->format('m/d');
-        $response->assertSee($today);
-        $response->assertSee($now->format('H:i'));
+        $html = $response->getContent();
+        preg_match('/<tr[^>]*>.*?' . preg_quote($today, '/') . '.*?<\/tr>/s', $html, $matches);
+        $row = $matches[0];
+        $this->assertStringContainsString($now->format('H:i'), $row);
     }
 }
