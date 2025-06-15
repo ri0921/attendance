@@ -28,7 +28,7 @@ class UserAttendanceListTest extends TestCase
         $this->actingAs($user);
         $response = $this->get('/attendance/list');
         $response->assertStatus(200);
-        
+
         $now = Carbon::now();
         $start_of_month = $now->copy()->startOfMonth();
         $end_of_month = $now->copy()->endOfMonth();
@@ -40,5 +40,16 @@ class UserAttendanceListTest extends TestCase
             $response->assertSee(Carbon::parse($attendance->clock_in)->format('H:i'));
             $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
         }
+    }
+
+    public function test_current_month()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance/list');
+        $response->assertStatus(200);
+        $now = Carbon::now();
+        $current_month = $now->format('Y/m');
+        $response->assertSee($current_month);
     }
 }
