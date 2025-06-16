@@ -46,4 +46,16 @@ class UserAttendanceDetailTest extends TestCase
         $response->assertSee($year);
         $response->assertSee($date);
     }
+
+    public function test_attendance_times()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee('9:00');
+        $response->assertSee('18:00');
+    }
 }
