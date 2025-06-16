@@ -74,4 +74,25 @@ class UserAttendanceListTest extends TestCase
             $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
         }
     }
+
+    public function test_next_month()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance/list');
+        $next_month = Carbon::now()->addMonth()->format('Y-m');
+        $response = $this->get('/attendance/list?month=' . $next_month);
+        $response->assertStatus(200);
+
+        $start = Carbon::now()->addMonth()->startOfMonth();
+        $end = Carbon::now()->addMonth()->endOfMonth();
+        $days = [];
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $days[] = $date->copy();
+        }
+        foreach ($days as $day) {
+            $date = $day->format('m/d');
+            $response->assertSee($date);
+        }
+    }
 }
