@@ -95,4 +95,24 @@ class UserAttendanceListTest extends TestCase
             $response->assertSee($date);
         }
     }
+
+    public function test_attendance_detail()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance/list');
+        $response->assertStatus(200);
+
+        $now = Carbon::now();
+        $start_of_month = $now->copy()->startOfMonth();
+        $end_of_month = $now->copy()->endOfMonth();
+        $attendance = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
+            ->first();
+
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee(Carbon::parse($attendance->date)->format('Y年'));
+        $response->assertSee(Carbon::parse($attendance->date)->format('m月d日'));
+    }
 }
