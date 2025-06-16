@@ -52,4 +52,26 @@ class UserAttendanceListTest extends TestCase
         $current_month = $now->format('Y/m');
         $response->assertSee($current_month);
     }
+
+    public function test_prev_month()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $response = $this->get('/attendance/list');
+        $prev_month = Carbon::now()->subMonth()->format('Y-m');
+        $response = $this->get('/attendance/list?month=' . $prev_month);
+        $response->assertStatus(200);
+
+        $start = Carbon::now()->subMonth()->startOfMonth();
+        $end = Carbon::now()->subMonth()->endOfMonth();
+
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+            ->get();
+
+        foreach ($attendances as $attendance) {
+            $response->assertSee(Carbon::parse($attendance->clock_in)->format('H:i'));
+            $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
+        }
+    }
 }
