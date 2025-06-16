@@ -8,6 +8,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class UserAttendanceDetailTest extends TestCase
 {
@@ -29,5 +30,20 @@ class UserAttendanceDetailTest extends TestCase
         $response = $this->get("/attendance/{$attendance->id}");
         $response->assertStatus(200);
         $response->assertSee($user->name);
+    }
+
+    public function test_date()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $today = Carbon::today();
+        $year = $today->copy()->format('Y年');
+        $date = $today->copy()->format('m月d日');
+        $response->assertSee($year);
+        $response->assertSee($date);
     }
 }
