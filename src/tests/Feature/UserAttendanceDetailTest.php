@@ -8,6 +8,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\BreakTime;
 use Carbon\Carbon;
 
 class UserAttendanceDetailTest extends TestCase
@@ -57,5 +58,20 @@ class UserAttendanceDetailTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('9:00');
         $response->assertSee('18:00');
+    }
+
+    public function test_break_times()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee('12:00');
+        $response->assertSee('12:45');
     }
 }
