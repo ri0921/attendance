@@ -11,7 +11,7 @@ use App\Models\Attendance;
 use App\Models\BreakTime;
 
 
-class UserStampCorrectionTest extends TestCase
+class UserStampCorrectionValidationTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -97,6 +97,34 @@ class UserStampCorrectionTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHasErrors([
             'break_time.0.break_start' => '休憩時間が勤務時間外です',
+        ]);
+    }
+
+    public function test_reason_is_null()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        $response = $this->post("/attendance/{$attendance->id}/request", [
+            'clock_in' => '09:00',
+            'clock_out' => '15:00',
+            'break_time' => [
+                [
+                    'break_start' => '14:00',
+                    'break_end' => '16:00',
+                ]
+            ],
+            'reason' => '',
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'reason' => '備考を記入してください',
         ]);
     }
 }
