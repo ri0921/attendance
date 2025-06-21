@@ -69,4 +69,22 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee($prev_date->format('Y/m/d'));
         $response->assertSee($user->name);
     }
+
+    public function test_next_day_attendance()
+    {
+        $user = User::find(3);
+        $today = Carbon::today();
+        $next_date = $today->copy()
+        ->addDay();
+        $attendance = Attendance::factory()->clocked_out()->create([
+            'user_id' => $user->id,
+            'date' => $next_date,
+        ]);
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->get("/admin/attendance/list?date={$next_date->format('Y-m-d')}");
+        $response->assertStatus(200);
+        $response->assertSee($next_date->format('Y/m/d'));
+        $response->assertSee($user->name);
+    }
 }
