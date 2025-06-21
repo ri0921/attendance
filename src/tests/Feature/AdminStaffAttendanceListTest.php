@@ -34,4 +34,25 @@ class AdminStaffAttendanceListTest extends TestCase
             $response->assertSee($user->email);
         }
     }
+
+    public function test_staff_attendance_list()
+    {
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $user = User::find(2);
+        $response = $this->get("/admin/attendance/staff/{$user->id}");
+        $response->assertStatus(200);
+
+        $now = Carbon::now();
+        $start_of_month = $now->copy()->startOfMonth();
+        $end_of_month = $now->copy()->endOfMonth();
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
+            ->get();
+
+        foreach ($attendances as $attendance) {
+            $response->assertSee(Carbon::parse($attendance->clock_in)->format('H:i'));
+            $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
+        }
+    }
 }
