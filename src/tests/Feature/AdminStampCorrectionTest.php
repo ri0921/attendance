@@ -78,4 +78,41 @@ class AdminStampCorrectionTest extends TestCase
         $response->assertSee($correction_attendance->clock_out);
         $response->assertSee($correction_attendance->reason);
     }
+
+    public function test_approve()
+    {
+        $attendance = Attendance::factory()->clocked_out()->create();
+        $correction_attendance = CorrectionAttendance::factory()
+            ->create([
+                'attendance_id' => $attendance->id,
+                'clock_in' => '08:00',
+                'clock_out' => '17:00',
+                'reason' => 'test',
+            ]);
+        $correction_break = CorrectionBreak::factory()
+            ->create([
+                'correction_attendance_id' => $correction_attendance->id,
+                'break_start' => '11:00',
+                'break_end' => '12:00',
+            ]);
+
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->post("/stamp_correction_request/approve/{$correction_attendance->id}");
+
+        $this->assertDatabaseHas('approvals', [
+            'correction_attendance_id' => $correction_attendance->id,
+            'approval_status' => '承認済み',
+        ]);
+        $this->assertDatabaseHas('attendances', [
+            'id' => $attendance->id,
+            'clock_in' => '08:00:00',
+            'clock_out' => '17:00:00',
+        ]);
+        $this->assertDatabaseHas('break_times', [
+            'attendance_id' => $attendance->id,
+            'break_start' => '11:00:00',
+            'break_end' => '12:00:00',
+        ]);
+    }
 }

@@ -18,7 +18,7 @@ class AttendanceFactory extends Factory
     {
         $date = Carbon::today();
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => 2,
             'date' => $date,
             'clock_in' => null,
             'clock_out' => null,
