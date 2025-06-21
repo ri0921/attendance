@@ -55,4 +55,27 @@ class AdminStaffAttendanceListTest extends TestCase
             $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
         }
     }
+
+    public function test_previous_month()
+    {
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $user = User::find(2);
+        $response = $this->get("/admin/attendance/staff/{$user->id}");
+        $prev_month = Carbon::now()->subMonth()->format('Y-m');
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month={$prev_month}");
+        $response->assertStatus(200);
+
+        $start = Carbon::now()->subMonth()->startOfMonth();
+        $end = Carbon::now()->subMonth()->endOfMonth();
+
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+            ->get();
+
+        foreach ($attendances as $attendance) {
+            $response->assertSee(Carbon::parse($attendance->clock_in)->format('H:i'));
+            $response->assertSee(Carbon::parse($attendance->clock_out)->format('H:i'));
+        }
+    }
 }
