@@ -100,4 +100,21 @@ class AdminStaffAttendanceListTest extends TestCase
             $response->assertSee($date);
         }
     }
+
+    public function test_attendance_detail()
+    {
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $user = User::find(2);
+        $attendance = Attendance::factory()->clocked_out()->create([
+            'user_id' => $user->id,
+        ]);
+        $response = $this->get("/admin/attendance/staff/{$user->id}");
+
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee($user->name);
+        $response->assertSee(Carbon::parse($attendance->date)->format('Y年'));
+        $response->assertSee(Carbon::parse($attendance->date)->format('m月d日'));
+    }
 }
