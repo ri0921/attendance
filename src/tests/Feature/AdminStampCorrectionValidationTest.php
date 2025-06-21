@@ -112,4 +112,32 @@ class AdminStampCorrectionValidationTest extends TestCase
             'break_time.0.break_start' => '休憩時間が勤務時間外です',
         ]);
     }
+
+    public function test_reason_is_required()
+    {
+        $attendance = Attendance::factory()->clocked_out()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        $response = $this->post("/attendance/{$attendance->id}/update", [
+            'clock_in' => '09:00',
+            'clock_out' => '18:00',
+            'break_time' => [
+                [
+                    'break_start' => '12:00',
+                    'break_end' => '13:00',
+                ]
+            ],
+            'reason' => '',
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'reason' => '備考を記入してください',
+        ]);
+    }
 }
