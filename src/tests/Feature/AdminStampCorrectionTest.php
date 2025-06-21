@@ -39,4 +39,25 @@ class AdminStampCorrectionTest extends TestCase
             $response->assertSee($correction_attendance->reason);
         }
     }
+
+    public function test_all_approvals_are_displayed_in_list()
+    {
+        $correction_attendances = CorrectionAttendance::factory()
+            ->count(5)
+            ->has(CorrectionBreak::factory())
+            ->create();
+        foreach ($correction_attendances as $correction_attendance) {
+            Approval::factory()
+                ->create(['correction_attendance_id' => $correction_attendance->id]);
+        }
+        $approvals = Approval::all();
+
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->get("/stamp_correction_request/list/?tab=approved");
+        $response->assertStatus(200);
+        foreach($approvals as $approval) {
+            $response->assertSee($approval->correctionAttendance->reason);
+        }
+    }
 }
