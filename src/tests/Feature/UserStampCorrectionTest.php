@@ -9,7 +9,6 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
-use Carbon\Carbon;
 
 
 class UserStampCorrectionTest extends TestCase
@@ -34,15 +33,42 @@ class UserStampCorrectionTest extends TestCase
         $response = $this->get("/attendance/{$attendance->id}");
         $response->assertStatus(200);
 
-        $today = Carbon::today();
         $response = $this->post("/attendance/{$attendance->id}/request", [
-            'clock_in' => $today->copy()->setTime(18, 0, 0),
-            'clock_out' => $today->copy()->setTime(9, 0, 0),
+            'clock_in' => '18:00',
+            'clock_out' => '09:00',
             'reason' => 'test'
         ]);
         $response->assertRedirect();
         $response->assertSessionHasErrors([
             'clock_out' => '出勤時間もしくは退勤時間が不適切な値です',
+        ]);
+    }
+
+    public function test_break_start_is_after_clock_out()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+        $response = $this->get("/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        $response = $this->post("/attendance/{$attendance->id}/request", [
+            'clock_in' => '09:00',
+            'clock_out' => '15:00',
+            'break_time' => [
+                [
+                    'break_start' => '16:00',
+                    'break_end' => '17:00',
+                ]
+            ],
+            'reason' => 'test'
+        ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors([
+            'break_time.0.break_start' => '休憩時間が勤務時間外です',
         ]);
     }
 
