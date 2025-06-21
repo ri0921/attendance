@@ -41,4 +41,14 @@ class AdminAttendanceListTest extends TestCase
         $this->assertEquals(3, substr_count($content, '09:00'));
         $this->assertEquals(3, substr_count($content, '18:00'));
     }
+
+    public function test_today_is_displayed()
+    {
+        $today = Carbon::today();
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->get('/admin/attendance/list');
+        $response->assertStatus(200);
+        $response->assertSee($today->format('Y/m/d'));
+    }
 }
