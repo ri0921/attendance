@@ -113,11 +113,11 @@ class UserStampCorrectionValidationTest extends TestCase
 
         $response = $this->post("/attendance/{$attendance->id}/request", [
             'clock_in' => '09:00',
-            'clock_out' => '15:00',
+            'clock_out' => '18:00',
             'break_time' => [
                 [
-                    'break_start' => '14:00',
-                    'break_end' => '16:00',
+                    'break_start' => '12:00',
+                    'break_end' => '13:00',
                 ]
             ],
             'reason' => '',
