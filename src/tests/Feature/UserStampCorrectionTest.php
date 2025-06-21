@@ -101,4 +101,31 @@ class UserStampCorrectionTest extends TestCase
             $response->assertSee($approval->correctionAttendance->reason);
         }
     }
+
+    public function test_correction_request_detail()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $attendance = Attendance::factory()->clocked_out()->create();
+        BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+        ]);
+        $response = $this->post("/attendance/{$attendance->id}/request", [
+            'clock_in' => '08:00',
+            'clock_out' => '17:00',
+            'break_time' => [
+                [
+                    'break_start' => '12:00',
+                    'break_end' => '13:00',
+                ]
+            ],
+            'reason' => 'test',
+        ]);
+        $correction_attendance = CorrectionAttendance::where('attendance_id', $attendance->id)->latest()->first();
+        $response = $this->get("/stamp_correction_request/list");
+        $response->assertStatus(200);
+        $response = $this->get("/attendance/{$correction_attendance->attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee('承認待ちのため修正はできません。');
+    }
 }
