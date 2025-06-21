@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Attendance;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 
 class AttendanceFactory extends Factory
@@ -17,7 +18,7 @@ class AttendanceFactory extends Factory
     {
         $date = Carbon::today();
         return [
-            'user_id' => 2,
+            'user_id' => User::inRandomOrder()->first()->id,
             'date' => $date,
             'clock_in' => null,
             'clock_out' => null,
