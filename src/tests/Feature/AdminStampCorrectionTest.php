@@ -60,4 +60,22 @@ class AdminStampCorrectionTest extends TestCase
             $response->assertSee($approval->correctionAttendance->reason);
         }
     }
+
+    public function test_correction_request_detail()
+    {
+        $user = User::find(2);
+        $correction_attendance = CorrectionAttendance::factory()
+            ->has(CorrectionBreak::factory())
+            ->create(['user_id' => $user->id]);
+
+        $admin = User::find(1);
+        $this->actingAs($admin);
+        $response = $this->get("/stamp_correction_request/approve/{$correction_attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee($user->name);
+        $response->assertSee(Carbon::parse($correction_attendance->attendance->date)->format('m月d日'));
+        $response->assertSee($correction_attendance->clock_in);
+        $response->assertSee($correction_attendance->clock_out);
+        $response->assertSee($correction_attendance->reason);
+    }
 }
