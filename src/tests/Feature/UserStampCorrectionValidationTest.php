@@ -100,7 +100,7 @@ class UserStampCorrectionValidationTest extends TestCase
         ]);
     }
 
-    public function test_reason_is_null()
+    public function test_reason_is_required()
     {
         $user = User::find(2);
         $this->actingAs($user);
