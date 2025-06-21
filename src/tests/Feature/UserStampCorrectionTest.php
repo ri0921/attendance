@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\CorrectionAttendance;
+use App\Models\CorrectionBreak;
 use Carbon\Carbon;
 
 class UserStampCorrectionTest extends TestCase
@@ -62,5 +63,21 @@ class UserStampCorrectionTest extends TestCase
         $response->assertSee($correction_attendance->approval_status);
         $response->assertSee($correction_attendance->user->name);
         $response->assertSee(Carbon::parse($correction_attendance->attendance->date)->format('Y/m/d'));
+    }
+
+    public function test_own_requests_are_displayed_in_list()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $correction_attendances = CorrectionAttendance::factory()
+            ->count(5)
+            ->has(CorrectionBreak::factory())
+            ->create(['user_id' => $user->id]);
+        $response = $this->get("/stamp_correction_request/list");
+        $response->assertStatus(200);
+        foreach ($correction_attendances as $correction_attendance) {
+            $response->assertSee($correction_attendance->reason);
+        }
+
     }
 }
