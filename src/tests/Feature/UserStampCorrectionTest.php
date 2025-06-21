@@ -11,6 +11,7 @@ use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\CorrectionAttendance;
 use App\Models\CorrectionBreak;
+use App\Models\Approval;
 use Carbon\Carbon;
 
 class UserStampCorrectionTest extends TestCase
@@ -78,6 +79,26 @@ class UserStampCorrectionTest extends TestCase
         foreach ($correction_attendances as $correction_attendance) {
             $response->assertSee($correction_attendance->reason);
         }
+    }
 
+    public function test_approvals_are_displayed_in_list()
+    {
+        $user = User::find(2);
+        $this->actingAs($user);
+        $correction_attendances = CorrectionAttendance::factory()
+            ->count(5)
+            ->has(CorrectionBreak::factory())
+            ->create(['user_id' => $user->id]);
+        $selected = $correction_attendances->random(3);
+        foreach ($selected as $correction_attendance) {
+            Approval::factory()
+                ->create(['correction_attendance_id' => $correction_attendance->id]);
+        }
+        $approvals = Approval::all();
+        $response = $this->get("/stamp_correction_request/list/?tab=approved");
+        $response->assertStatus(200);
+        foreach($approvals as $approval) {
+            $response->assertSee($approval->correctionAttendance->reason);
+        }
     }
 }
