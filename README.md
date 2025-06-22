@@ -6,7 +6,7 @@
 ```
 git clone git@github.com:ri0921/attendance.git
 ```
-* 以下のコマンドを実行
+* プロジェクト直下で以下のコマンドを実行
 ```
 make init
 ```
@@ -19,6 +19,26 @@ https://mailtrap.io/
 メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、<br>
 .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。<br>
 MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
+
+## テストアカウント
+### 管理者
+name: admin
+email: admin@example.com
+password: password
+
+### 一般ユーザー
+name: 山田　太郎
+email: taro.y@example.com
+password: password
+-------------------------
+name: 佐藤　花子
+email: hanako.s@example.com
+password: password
+-------------------------
+name: 西　伶奈
+email: reina.n@example.com
+password: password
+-------------------------
 
 ## PHPUnitを利用したテスト
 テスト用データベースの作成
