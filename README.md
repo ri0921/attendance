@@ -1,57 +1,110 @@
 # coachtech 勤怠管理アプリ
 
-## 概要
-
-coachtech勤怠管理アプリは、ある企業が開発した独自の勤怠管理ツールです。ユーザーが出勤・退勤を簡単に記録し、管理者が勤怠を効率的に確認・承認できる仕組みを提供します。  
-ユーザーの日々の勤怠を記録・管理し、煩雑な勤怠確認・申請・承認業務の効率化を図ることを目的としています。
-
-- **目標**：初年度でユーザー数 1,000人の達成
-- **ターゲット**
-  - 企業に勤める一般社員
-  - 勤怠を管理する管理者・マネージャー
-
----
-
 ## 環境構築
 
-### Dockerビルド
 * リポジトリをクローン
 ```
 git clone git@github.com:ri0921/attendance.git
 ```
-* Dockerをビルド
+* 以下のコマンドを実行
 ```
-docker-compose up -d --build
+make init
 ```
 
-### Laravel環境構築
-* PHPコンテナに入る
+## メール認証
+mailtrapというツールを使用しています。<br>
+以下のリンクから会員登録をしてください。<br>
+https://mailtrap.io/
+
+メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、<br>
+.envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。<br>
+MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
+
+## PHPUnitを利用したテスト
+* テスト用データベースの作成
+```
+docker-compose exec mysql bash
+```
+```
+mysql -u root -p
+```
+パスワードはrootと入力
+```
+CREATE DATABASE demo_test;
+```
+※.env.testingにもMAILの項目を設定してください。
+
+* 以下のコマンドを実行
+```
+make test
+```
+
+### テスト実行コマンド
 ```
 docker-compose exec php bash
 ```
-* Laravelパッケージのインストール
+1. 認証機能（一般ユーザー）
 ```
-composer install
+vendor/bin/phpunit tests/Feature/RegisterTest.php
 ```
-* .envファイル作成、環境変数を変更
+2. ログイン認証機能（一般ユーザー）
 ```
-cp src/.env.example src/.env
+vendor/bin/phpunit tests/Feature/UserLoginTest.php
 ```
-* アプリケーションキーの生成
+3. ログイン認証機能（管理者）
 ```
-php artisan key:generate
+vendor/bin/phpunit tests/Feature/AdminLoginTest.php
 ```
-* .env.testingを作成、環境変数を変更
-* テスト用アプリケーションキーの作成
+4. 5. 日時取得機能・ステータス確認機能
 ```
-php artisan key:generate --env=testing
+vendor/bin/phpunit tests/Feature/AttendanceStatusDisplayTest.php
+```
+6. 出勤機能
+```
+vendor/bin/phpunit tests/Feature/ClockInTest.php
+```
+7. 休憩機能
+```
+vendor/bin/phpunit tests/Feature/BreakTimeTest.php
+```
+8. 退勤機能
+```
+vendor/bin/phpunit tests/Feature/ClockOutTest.php
+```
+9. 勤怠一覧情報取得機能（一般ユーザー）
+```
+vendor/bin/phpunit tests/Feature/UserAttendanceListTest.php
+```
+10. 勤怠詳細情報取得機能（一般ユーザー）
+```
+vendor/bin/phpunit tests/Feature/UserAttendanceDetailTest.php
+```
+11. 勤怠詳細情報修正機能（一般ユーザー）
+```
+vendor/bin/phpunit tests/Feature/UserStampCorrectionValidationTest.php
 ```
 ```
-php artisan config:clear
+vendor/bin/phpunit tests/Feature/UserStampCorrectionTest.php
 ```
-* テスト用テーブル作成
+12. 勤怠一覧情報取得機能（管理者）
 ```
-php artisan migrate --env=testing
+vendor/bin/phpunit tests/Feature/AdminAttendanceListTest.php
+```
+13. 勤怠詳細情報取得・修正機能（管理者）
+```
+vendor/bin/phpunit tests/Feature/AdminStampCorrectionValidationTest.php
+```
+14. ユーザー情報取得機能（管理者）
+```
+vendor/bin/phpunit tests/Feature/AdminStaffAttendanceListTest.php
+```
+15. 勤怠情報修正機能（管理者）
+```
+vendor/bin/phpunit tests/Feature/AdminStampCorrectionTest.php
+```
+16. メール認証機能
+```
+vendor/bin/phpunit tests/Feature/EmailVerificationTest.php
 ```
 
 
@@ -59,7 +112,7 @@ php artisan migrate --env=testing
 * PHP 7.4.9
 * Laravel 8.83.8
 * MySQL 8.0.26
-* Mail
+* Mailtrap
 
 ## ER図
 ![ER図](attendance.png)
@@ -67,4 +120,4 @@ php artisan migrate --env=testing
 ## URL
 * 開発環境：<http://localhost/>
 * phpMyadmin：<http://localhost:8080/>
-* MailHog：<http://localhost:8025/>
+* Mailtrap：<https://mailtrap.io/>
