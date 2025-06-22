@@ -1,4 +1,4 @@
-# coachtech 勤怠管理アプリ
+# COACHTECH 勤怠管理アプリ
 
 ## 環境構築
 
@@ -21,20 +21,20 @@ https://mailtrap.io/
 MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 
 ## PHPUnitを利用したテスト
-* テスト用データベースの作成
+テスト用データベースの作成
 ```
 docker-compose exec mysql bash
 ```
 ```
 mysql -u root -p
 ```
-パスワードはrootと入力
+※ パスワードはrootと入力
 ```
 CREATE DATABASE demo_test;
 ```
-※.env.testingにもMAILの項目を設定してください。
+※ .env.testingにもMAILの項目を設定してください。
 
-* 以下のコマンドを実行
+以下のコマンドを実行
 ```
 make test
 ```
@@ -55,7 +55,8 @@ vendor/bin/phpunit tests/Feature/UserLoginTest.php
 ```
 vendor/bin/phpunit tests/Feature/AdminLoginTest.php
 ```
-4. 5. 日時取得機能・ステータス確認機能
+4. 日時取得機能
+5. ステータス確認機能
 ```
 vendor/bin/phpunit tests/Feature/AttendanceStatusDisplayTest.php
 ```
@@ -114,8 +115,10 @@ vendor/bin/phpunit tests/Feature/EmailVerificationTest.php
 * MySQL 8.0.26
 * Mailtrap
 
+
 ## ER図
 ![ER図](attendance.png)
+
 
 ## URL
 * 開発環境：<http://localhost/>
