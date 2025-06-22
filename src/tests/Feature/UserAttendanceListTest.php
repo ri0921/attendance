@@ -4,12 +4,10 @@ namespace Tests\Feature;
 
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class UserAttendanceListTest extends TestCase
 {
@@ -19,7 +17,6 @@ class UserAttendanceListTest extends TestCase
     {
         parent::setUp();
         $this->seed(DatabaseSeeder::class);
-        $this->withoutMiddleware(VerifyCsrfToken::class);
     }
 
     public function test_user_can_see_all_attendances()
@@ -35,6 +32,16 @@ class UserAttendanceListTest extends TestCase
         $attendances = Attendance::where('user_id', $user->id)
             ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
             ->get();
+
+        if ($attendances->isEmpty()) {
+            $attendance = Attendance::factory()->create([
+                'user_id' => $user->id,
+                'date' => $now->toDateString(),
+                'clock_in' => $now->copy()->setTime(9, 0),
+                'clock_out' => $now->copy()->setTime(17, 0),
+            ]);
+            $attendances = collect([$attendance]);
+        }
 
         foreach ($attendances as $attendance) {
             $response->assertSee(Carbon::parse($attendance->clock_in)->format('H:i'));

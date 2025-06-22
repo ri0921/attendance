@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Database\Seeders\UsersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
+use App\Models\User;
 
 class UserLoginTest extends TestCase
 {

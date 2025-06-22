@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\UsersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
@@ -18,8 +17,7 @@ class UserAttendanceDetailTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(DatabaseSeeder::class);
-        $this->withoutMiddleware(VerifyCsrfToken::class);
+        $this->seed(UsersTableSeeder::class);
     }
 
     public function test_name()

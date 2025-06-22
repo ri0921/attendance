@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\UsersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
@@ -18,7 +18,7 @@ class BreakTimeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(UsersTableSeeder::class);
         $this->withoutMiddleware(VerifyCsrfToken::class);
     }
 
@@ -68,18 +68,23 @@ class BreakTimeTest extends TestCase
     {
         $user = User::find(2);
         $this->actingAs($user);
-        $response = $this->post('/attendance/clock-in', [
-            'clock_in' => Carbon::now()->subHours(1),
+        $now = Carbon::now();
+        $attendance = Attendance::factory()->working()->create([
+            'clock_in' => $now->copy()->subHours(2),
         ]);
-        $response = $this->post('/break/start', [
-            'break_start' => Carbon::now()->subHour(),
+        $break_time = BreakTime::factory()->create([
+            'attendance_id' => $attendance->id,
+            'break_start' => $now->copy()->subHour(1),
+            'break_end' => $now->copy()->subMinutes(30),
+            'created_at' => $now->copy()->subMinutes(30),
+            'updated_at' => $now->copy()->subMinutes(30),
         ]);
-        $response = $this->post('/break/end', [
-            'break_end' => Carbon::now()->subMinutes(10),
-        ]);
-        $response = $this->post('/break/start');
         $response = $this->get('/attendance');
-        $response->assertStatus(200);
+        $response = $this->post('/break/start', [
+            'attendance_id' => $attendance->id,
+            'break_start' => $now->copy()->subMinutes(5),
+        ]);
+        $response = $this->get('/attendance');
         $response->assertSee('休憩戻');
     }
 
