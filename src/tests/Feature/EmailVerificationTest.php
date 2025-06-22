@@ -40,7 +40,12 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_verification_page()
     {
+        $user = User::factory()->unverified()->create();
+        $this->actingAs($user);
 
+        $client = new Client();
+        $response = $client->get('https://mailtrap.io/inboxes');
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function test_email_verified()
