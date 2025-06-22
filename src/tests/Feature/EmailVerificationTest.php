@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 use Illuminate\Support\Facades\URL;
-use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
@@ -17,12 +16,6 @@ class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
     use WithoutMiddleware;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(VerifyCsrfToken::class);
-    }
 
     public function test_registration_sends_verification_email()
     {

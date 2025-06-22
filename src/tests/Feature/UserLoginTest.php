@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\UsersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
+use App\Models\User;
 
 class UserLoginTest extends TestCase
 {
@@ -15,7 +15,7 @@ class UserLoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(UsersTableSeeder::class);
         $this->withoutMiddleware(VerifyCsrfToken::class);
     }
 

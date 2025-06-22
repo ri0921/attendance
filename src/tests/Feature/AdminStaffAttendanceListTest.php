@@ -4,12 +4,10 @@ namespace Tests\Feature;
 
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class AdminStaffAttendanceListTest extends TestCase
 {
@@ -19,7 +17,6 @@ class AdminStaffAttendanceListTest extends TestCase
     {
         parent::setUp();
         $this->seed(DatabaseSeeder::class);
-        $this->withoutMiddleware(VerifyCsrfToken::class);
     }
 
     public function test_all_staff_are_listed()

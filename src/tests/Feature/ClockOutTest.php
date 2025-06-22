@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\UsersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Middleware\VerifyCsrfToken;
 use Tests\TestCase;
@@ -16,7 +16,7 @@ class ClockOutTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(UsersTableSeeder::class);
         $this->withoutMiddleware(VerifyCsrfToken::class);
     }
 
