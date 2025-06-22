@@ -20,7 +20,7 @@ down:
 	docker compose down --remove-orphans
 
 cache:
-	docker-compose exec php php artisan cache:clear
+	docker-compose exec php php artisan config:clear
 	docker-compose exec php php artisan config:cache
 
 stop:
@@ -29,3 +29,9 @@ stop:
 start:
 	docker-compose start
 	docker-compose exec php bash
+
+test:
+	docker-compose exec php php artisan key:generate --env=testing
+	docker-compose exec php php artisan config:clear
+	docker-compose exec php php artisan config:cache
+	docker-compose exec php php artisan migrate --env=testing
