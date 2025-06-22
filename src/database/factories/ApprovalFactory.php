@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Approval;
 use App\Models\CorrectionAttendance;
-use App\Models\CorrectionBreak;
 
 class ApprovalFactory extends Factory
 {
