@@ -52,8 +52,14 @@ class AttendanceController extends Controller
         $break_time = null;
         if ($attendance) {
             $break_time = BreakTime::where('attendance_id', $attendance->id)
+                ->whereNull('break_end')
                 ->latest()
                 ->first();
+            if (!$break_time) {
+                $break_time = BreakTime::where('attendance_id', $attendance->id)
+                    ->latest('break_end')
+                    ->first();
+            }
         }
 
         return view('clock_in', compact('today', 'time', 'attendance', 'break_time'));
