@@ -17,7 +17,8 @@ mailtrapというツールを使用しています。<br>
 https://mailtrap.io/
 
 メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、<br>
-.envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。<br>
+.envファイルのMAIL_USERNAMEと
+MAIL_PASSWORDの項目を自分の設定に変更してください。<br>
 MAIL_FROM_ADDRESSはattendance@example.comです。
 
 ## テストアカウント
@@ -141,6 +142,8 @@ vendor/bin/phpunit tests/Feature/EmailVerificationTest.php
 
 
 ## URL
-* 開発環境：<http://localhost/>
+* 開発環境
+管理者用：<http://localhost/admin/login>
+一般ユーザー用：<http://localhost/login>
 * phpMyadmin：<http://localhost:8080/>
 * Mailtrap：<https://mailtrap.io/>
