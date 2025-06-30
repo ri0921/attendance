@@ -33,13 +33,8 @@ class UserAttendanceListTest extends TestCase
             ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
             ->get();
 
-        if ($attendances->isEmpty()) {
-            $attendance = Attendance::factory()->create([
-                'user_id' => $user->id,
-                'date' => $now->toDateString(),
-                'clock_in' => $now->copy()->setTime(9, 0),
-                'clock_out' => $now->copy()->setTime(17, 0),
-            ]);
+        if (!$attendances) {
+            $attendance = Attendance::factory()->clocked_out()->create();
             $attendances = collect([$attendance]);
         }
 
@@ -116,6 +111,10 @@ class UserAttendanceListTest extends TestCase
         $attendance = Attendance::where('user_id', $user->id)
             ->whereBetween('date', [$start_of_month->toDateString(), $end_of_month->toDateString()])
             ->first();
+
+        if (!$attendance) {
+            $attendance = Attendance::factory()->clocked_out()->create();
+        }
 
         $response = $this->get("/attendance/{$attendance->id}");
         $response->assertStatus(200);
